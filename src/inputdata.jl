@@ -110,7 +110,7 @@ function makeparameters(sets, options, hourinfo)
     initialstoragelevel = 0.7       # make this tech dependent later
     minflow_existinghydro = 0.4
     cspsolarmultiple = 3.0          # peak capacity of collectors divided by turbine power
-    cspthermalstoragehours = 12
+    cspthermalstoragehours = 10
 
     numregions = length(REGION)
     nhours = length(HOUR)
@@ -311,7 +311,7 @@ function makeparameters(sets, options, hourinfo)
     # Then assume solar field costs are 35% of total costs and storage about 10% of total costs (roughly inline with IRENA 2012, fig 4.4)
     # for this plant, and that costs for plants with other parameters vary linearly with solar multiple and storage size.
     # Finally convert to euro (1.15 USD/EUR) and assume a cost reduction of 25% to 2050. Resulting cost for a 3/12 solar tower: 6000 €/kW.
-    investcost[:csp,:] = investcost[:csp,:] * (0.55 + 0.35*cspsolarmultiple/3 + 0.10*cspthermalstoragehours/12)
+    investcost[:csp,:] = investcost[:csp,:] * (0.55 + 0.35*cspsolarmultiple/3 + 0.10*cspthermalstoragehours/10)
 
     cf[:,:csp,:,:] = cf[:,:csp,:,:] * cspsolarmultiple                          # OK if this surpasses 100%
     classlimits[:,:csp,:] = classlimits[:,:csp,:] / cspsolarmultiple            # GIS data calculated as peak solar power
