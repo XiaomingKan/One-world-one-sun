@@ -45,7 +45,7 @@ function readresults(model::ModelInfo, status::Symbol)
     transmissioncapac = AxisArray(getvalue(TransmissionCapacity))
     capac = getdict(getvalue(Capacity))
 
-    return Results(status, model.options, model.hourinfo, model.sets, params, cost, emis, fuel, elec, charge, storage, transmission, transmissioncapac, capac), price
+    return price, Results(status, model.options, model.hourinfo, model.sets, params, cost, emis, fuel, elec, charge, storage, transmission, transmissioncapac, capac)
 end
 
 function saveresults(results::Results, runname; resultsfile="", group="", compress=true)
