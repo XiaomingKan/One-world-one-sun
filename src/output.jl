@@ -21,14 +21,14 @@ AxisArrays.AxisArray(ja::JuMP.JuMPArray) = AxisArray(ja.innerArray, ja.indexsets
 # Convert a JuMPDict to a Dict. Uses current JuMPDict internals, will need a rewrite in the next JuMP version.
 getdict(jd::JuMP.JuMPDict) = jd.tupledict
 
-function readresults(model::ModelInfo, status::Symbol, runname::String)
+function readresults(model::ModelInfo, status::Symbol, name::String)
     @unpack REGION, TECH, CLASS, HOUR, techtype, STORAGECLASS = model.sets
     @unpack Systemcost, CO2emissions, FuelUse, Electricity, Charging, StorageLevel, Transmission, TransmissionCapacity, Capacity = model.vars
     @unpack demand, classlimits, hydrocapacity = model.params
     @unpack ElecDemand = model.constraints
     price = AxisArray([getdual(ElecDemand[r,h]) for r in REGION, h in HOUR])'
     price1=DataFrame(price)
-    CSV.write("$runname price.csv",price1)
+    CSV.write("$name price.csv",price1)
     storagetechs = [k for k in TECH if techtype[k] == :storage]
 
     params = Dict(:demand => demand, :classlimits => classlimits, :hydrocapacity => hydrocapacity)
