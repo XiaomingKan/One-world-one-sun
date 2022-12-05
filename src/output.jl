@@ -21,14 +21,14 @@ AxisArrays.AxisArray(ja::JuMP.JuMPArray) = AxisArray(ja.innerArray, ja.indexsets
 # Convert a JuMPDict to a Dict. Uses current JuMPDict internals, will need a rewrite in the next JuMP version.
 getdict(jd::JuMP.JuMPDict) = jd.tupledict
 
-function readresults(model::ModelInfo, status::Symbol, regionset::String)
+function readresults(model::ModelInfo, status::Symbol)
     @unpack REGION, TECH, CLASS, HOUR, techtype, STORAGECLASS = model.sets
     @unpack Systemcost, CO2emissions, FuelUse, Electricity, Charging, StorageLevel, Transmission, TransmissionCapacity, Capacity = model.vars
     @unpack demand, classlimits, hydrocapacity = model.params
     @unpack ElecDemand = model.constraints
-    price = AxisArray([getdual(ElecDemand[r,h]) for r in REGION, h in HOUR])'
-    price1=DataFrame(price)
-    CSV.write("$regionset price.csv",price1)
+    price1 = AxisArray([getdual(ElecDemand[r,h]) for r in REGION, h in HOUR])'
+    price=DataFrame(price1)
+    CSV.write("price.csv",price)
     storagetechs = [k for k in TECH if techtype[k] == :storage]
 
     params = Dict(:demand => demand, :classlimits => classlimits, :hydrocapacity => hydrocapacity)
@@ -45,7 +45,7 @@ function readresults(model::ModelInfo, status::Symbol, regionset::String)
     transmissioncapac = AxisArray(getvalue(TransmissionCapacity))
     capac = getdict(getvalue(Capacity))
 
-    return Results(status, model.options, model.hourinfo, model.sets, params, cost, emis, fuel, elec, charge, storage, transmission, transmissioncapac, capac)
+    return Results(status, model.options, model.hourinfo, model.sets, params, cost, emis, fuel, elec, charge, storage, transmission, transmissioncapac, capac), price
 end
 
 function saveresults(results::Results, runname; resultsfile="", group="", compress=true)
