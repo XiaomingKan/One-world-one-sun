@@ -28,7 +28,7 @@ function readresults(model::ModelInfo, status::Symbol)
     @unpack ElecDemand = model.constraints
     price = AxisArray([getdual(ElecDemand[r,h]) for r in REGION, h in HOUR])'
     price1=DataFrame(price)
-    CSV.write("$runname price.csv",price1)
+    CSV.write("$group$runname price.csv",price1)
     storagetechs = [k for k in TECH if techtype[k] == :storage]
 
     params = Dict(:demand => demand, :classlimits => classlimits, :hydrocapacity => hydrocapacity)
