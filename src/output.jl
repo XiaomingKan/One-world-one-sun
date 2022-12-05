@@ -21,7 +21,7 @@ AxisArrays.AxisArray(ja::JuMP.JuMPArray) = AxisArray(ja.innerArray, ja.indexsets
 # Convert a JuMPDict to a Dict. Uses current JuMPDict internals, will need a rewrite in the next JuMP version.
 getdict(jd::JuMP.JuMPDict) = jd.tupledict
 
-function readresults(model::ModelInfo, status::Symbol,regionset)
+function readresults(model::ModelInfo, status::Symbol, regionset::String)
     @unpack REGION, TECH, CLASS, HOUR, techtype, STORAGECLASS = model.sets
     @unpack Systemcost, CO2emissions, FuelUse, Electricity, Charging, StorageLevel, Transmission, TransmissionCapacity, Capacity = model.vars
     @unpack demand, classlimits, hydrocapacity = model.params
